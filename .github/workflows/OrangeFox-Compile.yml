@@ -92,19 +92,24 @@ jobs:
       run: |
         cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ inputs.MANIFEST_BRANCH }}
         
-        # التبديل لفرع R12 الجديد في المسار الصحيح (vendor/recovery)
+        # التبديل لفرع R12 الجديد في الواجهة (vendor) والمحرك (bootable)
         if [ "${{ inputs.RECOVERY_VERSION }}" == "R12.0-Beta" ]; then
-          echo "Fetching R12.0 New Source from vendor/recovery..."
+          echo "Fetching R12.0 New Source for Vendor..."
           cd vendor/recovery
           git fetch https://gitlab.com/OrangeFox/vendor/recovery fox_14.1-R12-new
           git checkout FETCH_HEAD
+          cd ../..
+
+          echo "Fetching R12.0 New Source for Bootable (Engine)..."
+          cd bootable/recovery
+          git fetch https://gitlab.com/OrangeFox/bootable/Recovery fox_14.1-R12-new || echo "No separate R12 branch for bootable, using default"
+          git checkout FETCH_HEAD || true
           cd ../..
         fi
 
         set +e
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
-        # السطر السحري لحل مشكلة Soong في أندرويد 14
         export BUILD_BROKEN_PLUGIN_VALIDATION=true
         set -e
         echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
