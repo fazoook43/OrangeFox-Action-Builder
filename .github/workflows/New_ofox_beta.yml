@@ -86,13 +86,17 @@ jobs:
           cd sync
           ./orangefox_sync.sh --branch ${{ inputs.MANIFEST_BRANCH }} --path ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ inputs.MANIFEST_BRANCH }}
 
-      - name: Sync Private Beta Recovery
+      - name: Sync Beta Recovery & Vendor
         run: |
           cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ inputs.MANIFEST_BRANCH }}
           
           # مسح ريكفري Public وسحب مستودع الـ Beta الخاص
           rm -rf bootable/recovery
           git clone https://gitlab.com/OrangeFox/Testing/Recovery.git -b fox_12.1_R12-new bootable/recovery
+          
+          # مسح الـ Vendor القديم وسحب فرع الـ R12 الجديد
+          rm -rf vendor/recovery
+          git clone https://gitlab.com/OrangeFox/vendor/recovery.git -b fox_12.1-R12-new vendor/recovery
 
       - name: Clone Device Tree
         run: |
