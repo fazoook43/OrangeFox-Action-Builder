@@ -1,4 +1,4 @@
-name: OrangeFox -Test-Beta- Build Beta
+name: OrangeFox -qpr2-test-Beta- Build Beta
 
 # Credits to:
 # https://github.com/TeamWin
@@ -92,18 +92,11 @@ jobs:
           
           # مسح ريكفري Public وسحب مستودع الـ Beta الخاص
           rm -rf bootable/recovery
-          git clone https://gitlab.com/OrangeFox/Testing/Recovery.git -b fox_12.1_R12-new bootable/recovery
+          git clone https://gitlab.com/OrangeFox/Testing/Recovery.git -b fox_12.1_R12-qpr2-test bootable/recovery
           
           # مسح الـ Vendor القديم وسحب فرع الـ R12 الجديد
           rm -rf vendor/recovery
           git clone https://gitlab.com/OrangeFox/vendor/recovery.git -b fox_12.1-R12-new vendor/recovery
-
-          # ---------------------------------------------------------
-          # الترقيع السحري: تعطيل الاستدعاء الأوتوماتيك لمنع كراش الواجهة
-          # ---------------------------------------------------------
-          echo "Applying template.xml patch..."
-          sed -i '/<condition var1="instant_apply" var2="1"\/>/,+4 s/<action function="overlay">apply_changes<\/action>//g' bootable/recovery/gui/theme/portrait_hdpi/pages/templates/templates.xml
-          echo "Patch applied successfully!"
 
       - name: Clone Device Tree
         run: |
@@ -141,7 +134,7 @@ jobs:
           name: OrangeFox Recovery for ${{ inputs.DEVICE_NAME }} // ${{ env.BUILD_DATE }} // Official Beta
           tag_name: ${{ github.run_id }}
           body: |
-            ## OrangeFox Recovery Build - Official Beta
+            ## OrangeFox Recovery Build - Official Beta qpr2-test
             - **Maintainer:** Mostafameesr
             - **Build:** fox_${{ inputs.MANIFEST_BRANCH }} (Beta)
             - **Device:** [Device Tree/Branch](${{ env.DEVICE_TREE_URL }}/tree/${{ inputs.DEVICE_TREE_BRANCH }})
