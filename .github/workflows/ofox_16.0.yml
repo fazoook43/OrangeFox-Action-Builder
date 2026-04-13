@@ -84,14 +84,11 @@ jobs:
             git config --global url."https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.com/".insteadOf "https://gitlab.com/"
             git clone https://gitlab.com/OrangeFox/sync.git -b master sync_dir
             cd sync_dir
-            ./orangefox_sync.sh --branch ${{ inputs.MANIFEST_BRANCH }} --path ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ inputs.MANIFEST_BRANCH }}
+            bash orangefox_sync.sh --branch ${{ inputs.MANIFEST_BRANCH }} --path ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ inputs.MANIFEST_BRANCH }}
           else
-            # السنك من GitHub (OrangeFox16)
             git clone https://github.com/OrangeFox16/sync.git -b master sync_dir
             cd sync_dir
-            MANIFEST_VER=${{ inputs.MANIFEST_BRANCH }}
-            [ "$MANIFEST_VER" = "16.0" ] && MANIFEST_VER="twrp-16.0"
-            bash sync.sh --branch $MANIFEST_VER --path ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ inputs.MANIFEST_BRANCH }}
+            bash orangefox_sync.sh --branch ${{ inputs.MANIFEST_BRANCH }} --path ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ inputs.MANIFEST_BRANCH }}
           fi
 
       - name: Sync Beta Recovery & Vendor
