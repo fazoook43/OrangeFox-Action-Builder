@@ -105,18 +105,16 @@ jobs:
       - name: Set-up Manifest & Authenticate GitLab
         if: inputs.MANIFEST_BRANCH == '11.0' || inputs.MANIFEST_BRANCH == '12.1'
         run: |
-          /tmp/tg_bot.sh "⏳ *Syncing sources started...*
-          Sync Source: \`GitLab\`" "private"
-          
+          /tmp/tg_bot.sh "⏳ *Syncing sources started...*" "private"
           echo "SYNC_START=$(date +%s)" >> $GITHUB_ENV
-          
+
           # إعداد بيانات الدخول لـ GitLab علشان يقدر يسحب المستودعات الخاصة
           git config --global url."https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.com/".insteadOf "https://gitlab.com/"
 
           mkdir -p ${GITHUB_WORKSPACE}/OrangeFox
           cd ${GITHUB_WORKSPACE}/OrangeFox
           git config --global user.name "${{ github.actor }}"
-          git config --global user.email "${{ github.actor_id_+github.actor }}@users.noreply.github.com"
+          git config --global user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
           
           # سحب السورس الأساسي
           git clone https://gitlab.com/OrangeFox/sync.git -b master
@@ -134,7 +132,7 @@ jobs:
           # مسح الـ Vendor القديم وسحب فرع الـ R12 الجديد
           rm -rf vendor/recovery
           git clone https://gitlab.com/OrangeFox/vendor/recovery.git -b fox_12.1-R12-new vendor/recovery
-          
+
           SYNC_END=$(date +%s)
           SYNC_DIFF=$((SYNC_END - SYNC_START))
           /tmp/tg_bot.sh "✅ *Sync completed successfully* ⏱️ Took: $((SYNC_DIFF / 60)) mins and $((SYNC_DIFF % 60)) secs." "private"
@@ -152,7 +150,8 @@ jobs:
         run: |
           /tmp/tg_bot.sh "⚙️ *Starting recovery build...*" "private"
           BUILD_START=$(date +%s)
-          
+          echo "BUILD_START=$BUILD_START" >> $GITHUB_ENV
+
           cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ inputs.MANIFEST_BRANCH }}
           set +e
           source build/envsetup.sh
