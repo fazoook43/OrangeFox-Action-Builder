@@ -1,4 +1,4 @@
-name: c-fox_16.0- Build Beta
+name: OrangeFox -fox_16.0- Build Beta
 
 on:
   workflow_dispatch:
