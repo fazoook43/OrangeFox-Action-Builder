@@ -12,9 +12,10 @@ on:
       MANIFEST_BRANCH:
         description: 'OrangeFox Manifest Branch'
         required: true
-        default: '12.1'
+        default: '16.0'
         type: choice
         options:
+          - '16.0'
           - '12.1'
           - '11.0'
       DEVICE_TREE:
@@ -103,7 +104,7 @@ jobs:
           sudo bash setup/android_build_env.sh
 
       - name: Set-up Manifest & Authenticate GitLab
-        if: inputs.MANIFEST_BRANCH == '11.0' || inputs.MANIFEST_BRANCH == '12.1'
+        if: inputs.MANIFEST_BRANCH == '11.0' || inputs.MANIFEST_BRANCH == '12.1' || inputs.MANIFEST_BRANCH == '16.0'
         run: |
           /tmp/tg_bot.sh "⏳ *Syncing sources started...*" "private"
           echo "SYNC_START=$(date +%s)" >> $GITHUB_ENV
@@ -117,7 +118,7 @@ jobs:
           git config --global user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
           
           # سحب السورس الأساسي
-          git clone https://gitlab.com/OrangeFox/sync.git -b master
+          git clone https://github.com/OrangeFox16/sync.git -b master
           cd sync
           ./orangefox_sync.sh --branch ${{ inputs.MANIFEST_BRANCH }} --path ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ inputs.MANIFEST_BRANCH }}
 
