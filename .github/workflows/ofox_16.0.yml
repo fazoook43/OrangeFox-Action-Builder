@@ -1,4 +1,4 @@
-name: OrangeFox -fox_16.0- Build Beta
+Name: OrangeFox -fox_16.0- Build Beta
 
 on:
   workflow_dispatch:
@@ -91,7 +91,7 @@ jobs:
             cd sync_dir
             MANIFEST_VER=${{ inputs.MANIFEST_BRANCH }}
             [ "$MANIFEST_VER" = "16.0" ] && MANIFEST_VER="twrp-16.0"
-            bash sync.sh --branch $MANIFEST_VER --path ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ inputs.MANIFEST_BRANCH }}
+            bash orangefox_sync.sh --branch $MANIFEST_VER --path ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ inputs.MANIFEST_BRANCH }}
           fi
 
       - name: Sync Beta Recovery & Vendor
@@ -145,3 +145,14 @@ jobs:
             - **Device:** ${{ inputs.DEVICE_NAME }}
             - **Sync Source:** ${{ inputs.SYNC_SOURCE }}
             - **Commit:** [Link](${{ env.DEVICE_TREE_URL }}/commit/${{ env.COMMIT_ID }})
+
+      - name: Send to Telegram
+        run: |
+          ZIP_FILE=$(ls ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ inputs.MANIFEST_BRANCH }}/out/target/product/${{ inputs.DEVICE_NAME }}/OrangeFox*.zip)
+          IMG_FILE=$(ls ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ inputs.MANIFEST_BRANCH }}/out/target/product/${{ inputs.DEVICE_NAME }}/OrangeFox*.img)
+          
+          CAPTION="✅ *OrangeFox Build Success!*%0A%0A📱 *Device:* ${{ inputs.DEVICE_NAME }}%0A📅 *Date:* ${{ env.BUILD_DATE }}%0A🔗 [View Release](https://github.com/${{ github.repository }}/releases/tag/Build-${{ github.run_id }}-${{ env.BUILD_DATE }})"
+          
+          # إرسال الملفات لشاتك الخاص
+          curl -s -F "chat_id=${{ secrets.TG_CHAT_ID }}" -F "caption=${CAPTION}" -F "parse_mode=Markdown" -F "document=@${ZIP_FILE}" https://api.telegram.org/bot${{ secrets.TG_TOKEN }}/sendDocument
+          curl -s -F "chat_id=${{ secrets.TG_CHAT_ID }}" -F "document=@${IMG_FILE}" https://api.telegram.org/bot${{ secrets.TG_TOKEN }}/sendDocument
