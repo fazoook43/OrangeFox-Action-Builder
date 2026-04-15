@@ -127,7 +127,7 @@ jobs:
           
           # مسح ريكفري Public وسحب مستودع الـ Beta الخاص
           rm -rf bootable/recovery
-          git clone https://gitlab.com/OrangeFox/Testing/Recovery.git -b fox_12.1_R12-qpr2-test-new bootable/recovery
+          git clone https://gitlab.com/OrangeFox/Testing/Recovery.git -b fox_12.1_R12-qpr2-test bootable/recovery
           
           # مسح الـ Vendor القديم وسحب فرع الـ R12 الجديد
           rm -rf vendor/recovery
